@@ -13,6 +13,8 @@ export default defineEventHandler(async (event) => {
     const dealer = new Dealer(game, game);
     const player = new Player(dealer);
     player.stand();
+
+    
     const data = game.getData();
 
     await useStorage().setItem(gameKey, data)
