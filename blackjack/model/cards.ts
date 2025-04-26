@@ -15,22 +15,15 @@ export enum CARD {
     King = 'KING'
 }
 
-export class Card {
-    #suit: SUIT;
-    #card: CARD; 
 
-    constructor(suit: SUIT, card: CARD) {
-        this.#card = card;
-        this.#suit = suit;
-    }
 
-    get card(): CARD {
-        return this.#card;
-    }
+export type Card = {
+    suit: SUIT; 
+    card: CARD;
+}
 
-    get suit(): SUIT {
-        return this.#suit;
-    }
+export function newCard( suit: SUIT, card: CARD ): Card {
+    return { suit, card }
 }
 
 export function cardValue( card: Card) {
@@ -58,7 +51,7 @@ export function newSetOfCards(): Card[] {
     const set: Card[] = [];
     suits.forEach(suit => {
         cards.forEach(card => {
-            set.push(new Card(suit, card))
+            set.push({ suit, card })
         }) 
     })
     return set;

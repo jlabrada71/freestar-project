@@ -17,6 +17,7 @@ interface IPlay {
 }
 
 interface IDeal {
+    stand(): unknown;
     hasCards(): boolean;
     giveTo(player: number): void;
 }
@@ -49,6 +50,7 @@ export class Dealer implements IPlay {
     }
 
     stand() {
+        this.#game.stand();
         while(this.#scorer.scoreOf(DEALER) < 17 && this.#game.hasCards()) {
             this.#game.giveTo(DEALER);
         }
@@ -67,15 +69,18 @@ export interface IScorer {
 }
 export class Game implements IDeal, IScorer {
     
+    
     #hands: Card[][];
 
     #cards: Card[];
     #shuffler: IShuffler;
+    #standed: boolean;
 
     constructor(shuffler = fisherYatesShuffler ) {
         this.#hands = [[],[]]
         this.#shuffler = shuffler;
         this.#cards = this.#shuffler(newSetOfCards());
+        this.#standed = false;
     }
 
     init(initialSet?:Card[] ) {
@@ -105,6 +110,13 @@ export class Game implements IDeal, IScorer {
         return this.#cards.length > 0;
     }
 
+    stand() {
+        this.#standed = true;
+    }
+
+    hasStanded(): boolean {
+        return this.#standed;
+    }
 
     status() {
 
@@ -115,16 +127,33 @@ export class Game implements IDeal, IScorer {
             return 'Push';
         }
 
-        if (playerScore > 21 || (dealerScore < 22 && dealerScore > playerScore) ) {
+        if (playerScore > 21 || (dealerScore < 22 && dealerScore > playerScore && this.#standed) ) {
             return 'Dealer Won';
         }
 
-        if (playerScore == 21 || playerScore > dealerScore || dealerScore > 21 ) {
+        if (playerScore == 21 || (playerScore > dealerScore && this.#standed) || dealerScore > 21 ) {
             return 'Player Won';
         }
 
         return 'Playing...';
         
+    }
+
+    getData() {
+        return {
+            cards: this.#cards,
+            dealerHand: this.#hands[DEALER],
+            playerHand: this.#hands[PLAYER],
+            dealerScore: this.scoreOf(DEALER),
+            playerScore: this.scoreOf(PLAYER),
+            status: this.status(),
+        }
+    }
+
+    setData(data) {
+        this.#cards = data.cards;
+        this.#hands[DEALER] = data.dealerHand;
+        this.#hands[PLAYER] = data.playerHand;
     }
 
     get cards(): Card[] {
