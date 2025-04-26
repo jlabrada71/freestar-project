@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-cyan-800 p-14 flex flex-col">
+    <div class="bg-cyan-800 p-10 flex flex-col">
         <h1 class="text-slate-100 text-3xl mb-4 mt-0">{{ title }}</h1>
         <div class="flex">
           <div class="flex gap-5 grow">
