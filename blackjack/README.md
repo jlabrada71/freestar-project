@@ -1,75 +1,99 @@
-# Nuxt Minimal Starter
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+# 🃏 BlackJack App (Nuxt.js)
 
-## Setup
+Welcome to the BlackJack application!  
+This is a simple, interactive BlackJack game built using **TypeScript**, **VueJS** , **Nuxtjs** and **TailwindCSS**.
 
-Make sure to install dependencies:
+This README provides a runbook for operating, building, and testing the application.
 
-```bash
-# npm
-npm install
+---
 
-# pnpm
-pnpm install
+## 🏃‍♂️ Runbook
 
-# yarn
-yarn install
+### Requirements
+- Node.js v20+ (recommended)
+- npm v9+ 
+- Git (for version control)
 
-# bun
-bun install
-```
+---
 
-## Development Server
+### Starting the Application Locally
 
-Start the development server on `http://localhost:3000`:
+1. **Clone the repository**
+   ```bash
+   git clone  https://github.com/jlabrada71/freestar-project.git
+   cd freestar-project/blackjack
+   ```
 
-```bash
-# npm
-npm run dev
+2. **Install dependencies**
+   ```bash
+   npm install
 
-# pnpm
-pnpm dev
+   ```
 
-# yarn
-yarn dev
+3. **Run the development server**
+   ```bash
+   npm run dev
 
-# bun
-bun run dev
-```
+   ```
+   
+   The app will start on [http://localhost:3000](http://localhost:3000).
 
-## Production
+---
 
-Build the application for production:
+### Building for Production
 
-```bash
-# npm
-npm run build
+1. **Build the app**
+   ```bash
+   npm run build
 
-# pnpm
-pnpm build
+   ```
 
-# yarn
-yarn build
+2. **Preview the production build**
+   ```bash
+   npm run preview
 
-# bun
-bun run build
-```
+   ```
+   > This will simulate a production server locally on [http://localhost:3000](http://localhost:3000).
 
-Locally preview production build:
+---
 
-```bash
-# npm
-npm run preview
+### Testing the Application
 
-# pnpm
-pnpm preview
+> _Testing ensures that gameplay business rules are stable and bug-free._
 
-# yarn
-yarn preview
+1. **Run unit tests**  
+   _(if you have set up testing, e.g., Vitest or Jest)_
+   ```bash
+   npm run test
 
-# bun
-bun run preview
-```
+   ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+---
+
+## 🛠️ Technologies Used
+
+- [Nuxt.js 3](https://nuxt.com/)
+- [Vue.js 3](https://vuejs.org/)
+- [Tailwind CSS](https://tailwindcss.com/) 
+- Testing: [Vitest](https://vitest.dev/)
+
+---
+
+## 📋 Notes
+
+- **Static Hosting:**  
+  If you want to deploy to platforms like Vercel, Netlify, etc., build the app using `npm run build` and follow their deployment instructions.
+
+---
+
+## 🚨 Troubleshooting
+
+| Issue                      | Solution                                   |
+|-----------------------------|--------------------------------------------|
+| Ports already in use        | Kill the existing process or change port  |
+| Modules not found           | Run `npm install` again                    |
+| Build errors                | Check Nuxt logs and verify environment     |
+| Unexpected gameplay behavior | Clear browser cache and cookies            |
+
+
