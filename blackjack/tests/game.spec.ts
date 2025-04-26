@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Game, scoreHand, PLAYER, DEALER } from "../model/blackjack";
+import { Game, PLAYER, DEALER, Dealer, Player } from "../model/blackjack";
 import { Card, SUIT, CARD } from '../model/cards';
 
 describe('Game initialization', () => {
@@ -18,29 +18,48 @@ describe('Game initialization', () => {
     })
 })
 
+function areSame(card1: Card, card2: Card ) {
+    return card1.card === card2.card && card1.suit === card2.suit;
+}
+
 describe('Dealing', () => {
     const game = new Game();
-    game.init();
-    game.dealing();
+    const cards: Card[] = [
+        new Card(SUIT.Diamond, CARD.Five),
+        new Card(SUIT.Club, CARD.Ace),
+        new Card(SUIT.Club, CARD.Eight),
+        new Card(SUIT.Club, CARD.Five),
+        new Card(SUIT.Club, CARD.Four),
+    ]
+    game.init(cards);
+    const dealer = new Dealer(game, game);
+    dealer.deals();
 
     it('should give two cards to the dealer', () => {
         expect(game.hands[DEALER].length).toBe(2);
+        expect(areSame(game.hands[DEALER][0], new Card(SUIT.Club, CARD.Five))).toBe(true);
+        expect(areSame(game.hands[DEALER][1], new Card(SUIT.Club, CARD.Ace))).toBe(true);
     })
 
     it('should give two cards to the player', () => {
         expect(game.hands[PLAYER].length).toBe(2);
+        expect(areSame(game.hands[PLAYER][0], new Card(SUIT.Club, CARD.Four))).toBe(true);
+        expect(areSame(game.hands[PLAYER][1], new Card(SUIT.Club, CARD.Eight))).toBe(true);
     })
 
     it('should remove 4 cards from the set', () => {
-        expect(game.cards.length).toBe(48);
+        expect(game.cards.length).toBe(1);
     })
 })
 
 describe('Player Hits', () => {
     const game = new Game();
     game.init();
-    game.dealing();
-    game.hit();
+    const dealer = new Dealer(game, game);
+    dealer.deals();
+
+    const player = new Player(dealer);
+    player.hit();
 
     // console.log(game.hands[DEALER][0].card)
     // console.log(game.hands[DEALER][1].card)
@@ -62,76 +81,236 @@ describe('Player Hits', () => {
 })
 
 describe('Player Stands', () => {
-    const game = new Game();
-    game.init();
-    game.dealing();
-    game.stand();
+     const game = new Game();
+     const cards: Card[] = [
+        new Card(SUIT.Heart, CARD.Five),
+        new Card(SUIT.Diamond, CARD.Five),
+        new Card(SUIT.Club, CARD.Ace),
+        new Card(SUIT.Club, CARD.Eight),
+        new Card(SUIT.Club, CARD.Five),
+        new Card(SUIT.Club, CARD.Four),
+    ]
+    game.init(cards);
 
-    it('the dealer takes cards until he has more that 17 points', () => {
-        expect(scoreHand(game.hands[DEALER])).toBeGreaterThan(16);
-        // expect(game.hands[DEALER].length).toBe(3);
-    })             
+    const dealer = new Dealer(game, game);
+    dealer.deals();
+    
+    const player = new Player(dealer);
+    player.hit();
 
-    it('should remove those cards from the set', () => {
-       expect(game.cards.length).toBe(50 - game.hands[DEALER].length);
-    })
+     player.stand();
+
+     it('the dealer takes cards until he has more that 17 points', () => {
+        expect(game.scoreOf(DEALER)).toBeGreaterThan(16);
+        expect(game.hands[DEALER].length).toBe(3);
+     })             
+
+     it('should remove those cards from the set', () => {
+        expect(game.cards.length).toBe(0);
+     })
 })
 
 describe('Determine the winner', () => {
 
-    describe('The player wins when it has more than the dealer and reach 21', () => {
+    describe('The player wins when it has 21 and the dealer less than 21', () => {
         const game = new Game();
         const cards: Card[] = [
-            new Card(SUIT.Diamond, CARD.Five),
+            new Card(SUIT.Diamond, CARD.Nine),
             new Card(SUIT.Club, CARD.Ace),
             new Card(SUIT.Club, CARD.Eight),
             new Card(SUIT.Club, CARD.Five),
             new Card(SUIT.Club, CARD.Four),
         ]
         game.init(cards);
-        game.dealing();
-        game.hit();
+        const dealer = new Dealer(game, game);
+        dealer.deals();
+        const player = new Player(dealer);
+        player.hit();
+        
         const status = game.status();
 
         it('the status should be Player won ', () => {
             expect(status).toBe('Player Won');
         });
 
-        it('the dealer should have 12 ', () => {
-            expect(scoreHand(game.hands[DEALER])).toBe(12);
+        it('the dealer should have 16 ', () => {
+            expect(game.hands[DEALER].length).toBe(2);
+            expect(areSame(game.hands[DEALER][0], new Card(SUIT.Club, CARD.Five))).toBe(true);
+            expect(areSame(game.hands[DEALER][1], new Card(SUIT.Club, CARD.Ace))).toBe(true);
+            expect(game.scoreOf(DEALER)).toBe(16);
         });
 
         it('the player should have 21 ', () => {
-            expect(scoreHand(game.hands[PLAYER])).toBe(21);
+            expect(game.hands[PLAYER].length).toBe(3);
+            expect(areSame(game.hands[PLAYER][0], new Card(SUIT.Club, CARD.Four))).toBe(true);
+            expect(areSame(game.hands[PLAYER][1], new Card(SUIT.Club, CARD.Eight))).toBe(true);
+            expect(areSame(game.hands[PLAYER][2], new Card(SUIT.Diamond, CARD.Nine))).toBe(true);
+            expect(game.scoreOf(PLAYER)).toBe(21);
         });
     });
 
-    describe('when the player has more than the dealer and less than 21 and has not stand', () => {
+    describe('The player wins when it has more than the dealer and less than 21', () => {
+        const game = new Game();
+        const cards: Card[] = [
+            new Card(SUIT.Diamond, CARD.Seven),
+            new Card(SUIT.Club, CARD.Six),
+            new Card(SUIT.Club, CARD.King),
+            new Card(SUIT.Club, CARD.Five),
+            new Card(SUIT.Club, CARD.Nine),
+        ]
+        game.init(cards);
+        const dealer = new Dealer(game, game);
+        dealer.deals();
+        
+        const player = new Player(dealer);
+        player.stand();
+
+        const status = game.status();
+
+        it('the status should be playing ', () => {
+            expect(status).toBe('Player Won');
+        });
+
+        it('the dealer should have 16 ', () => {
+            expect(game.scoreOf(DEALER)).toBe(18);
+        });
+
+        it('the player should have 19 ', () => {
+            expect(game.scoreOf(PLAYER)).toBe(19);
+        });
+    });
+
+    describe('The player wins when the dealer gets more than 21', () => {
+        const game = new Game();
+        const cards: Card[] = [
+            new Card(SUIT.Diamond, CARD.Ten),
+            new Card(SUIT.Club, CARD.Seven),
+            new Card(SUIT.Club, CARD.King),
+            new Card(SUIT.Club, CARD.Five),
+            new Card(SUIT.Club, CARD.Nine),
+        ]
+        game.init(cards);
+        const dealer = new Dealer(game, game);
+        dealer.deals();
+        
+        const player = new Player(dealer);
+        player.stand();
+
+        const status = game.status();
+
+        it('the status should be playing ', () => {
+            expect(status).toBe('Player Won');
+        });
+
+        it('the dealer should have 22 ', () => {
+            expect(game.scoreOf(DEALER)).toBe(22);
+        });
+
+        it('the player should have 19 ', () => {
+            expect(game.scoreOf(PLAYER)).toBe(19);
+        });
+    });
+
+    describe('The dealer wins when it has more than the player and less than 22', () => {
+        const game = new Game();
+        const cards: Card[] = [
+            new Card(SUIT.Diamond, CARD.Seven),
+            new Card(SUIT.Club, CARD.Six),
+            new Card(SUIT.Club, CARD.Five),
+            new Card(SUIT.Club, CARD.Five),
+            new Card(SUIT.Club, CARD.Nine),
+        ]
+        game.init(cards);
+        const dealer = new Dealer(game, game);
+        dealer.deals();
+        
+        const player = new Player(dealer);
+        player.stand();
+
+        const status = game.status();
+
+        it('the status should be playing ', () => {
+            expect(status).toBe('Dealer Won');
+        });
+
+        it('the dealer should have 16 ', () => {
+            expect(game.scoreOf(DEALER)).toBe(18);
+        });
+
+        it('the player should have 19 ', () => {
+            expect(game.scoreOf(PLAYER)).toBe(14);
+        });
+    });
+
+    describe('The dealer wins when the player gets more than 21', () => {
+        const game = new Game();
+        const cards: Card[] = [
+            new Card(SUIT.Diamond, CARD.Ten),
+            new Card(SUIT.Club, CARD.Seven),
+            new Card(SUIT.Club, CARD.King),
+            new Card(SUIT.Club, CARD.Five),
+            new Card(SUIT.Club, CARD.Nine),
+        ]
+        game.init(cards);
+        const dealer = new Dealer(game, game);
+        dealer.deals();
+        
+        const player = new Player(dealer);
+        player.hit();
+
+        const status = game.status();
+
+        it('the status should be Dealer won ', () => {
+            expect(status).toBe('Dealer Won');
+        });
+
+        it('the dealer should have 12', () => {
+            expect(game.scoreOf(DEALER)).toBe(12);
+        });
+
+        it('the player should have 19 ', () => {
+            expect(game.scoreOf(PLAYER)).toBe(29);
+        });
+    });
+    
+
+    describe('when the player and the dealer have the same amount lower than 22 and greater than 16 is a draw', () => {
         const game = new Game();
         const cards: Card[] = [
             new Card(SUIT.Diamond, CARD.Five),
             new Card(SUIT.Club, CARD.Ace),
             new Card(SUIT.Club, CARD.Eight),
-            new Card(SUIT.Club, CARD.Five),
+            new Card(SUIT.Club, CARD.Eight),
             new Card(SUIT.Club, CARD.Four),
+            new Card(SUIT.Club, CARD.Four),
+            new Card(SUIT.Club, CARD.Nine),
+            new Card(SUIT.Club, CARD.Nine),
         ]
         game.init(cards);
-        game.dealing();
+        const dealer = new Dealer(game, game);
+        dealer.deals();
+        
+        const player = new Player(dealer);
+        player.hit();
+        player.stand();
         const status = game.status();
 
         it('the status should be playing ', () => {
-            expect(status).toBe('Playing...');
+            expect(status).toBe('Push');
         });
 
-        it('the dealer should have 12 ', () => {
-            expect(scoreHand(game.hands[DEALER])).toBe(12);
+        it('the dealer should have 21 ', () => {
+            expect(game.scoreOf(DEALER)).toBe(21);
         });
 
         it('the player should have 21 ', () => {
-            expect(scoreHand(game.hands[PLAYER])).toBe(16);
+            expect(game.scoreOf(PLAYER)).toBe(21);
         });
-
     });
+
+    describe('when the player and the dealer have the same amount lower than 22 and greater than 16 is a draw', () => { 
+        it('', () => {})
+    })
 });
 
 

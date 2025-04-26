@@ -50,7 +50,6 @@ export function cardValue( card: Card) {
         case CARD.King: return  10;
     }
     return -1;
-
 }
 
 export function newSetOfCards(): Card[] {
