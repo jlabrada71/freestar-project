@@ -9,13 +9,10 @@
         <h1>Dealer Cards</h1>
         <div class="flex h-full">
           <div class="flex gap-5 grow h-full">
-            <CardComponent v-if="isPlaying" :card="{suit: '-', card:'-'}">Back</CardComponent>
+            <CardComponent v-if="isPlaying" :card="{suit: '-', card:'-'}">Back of Card</CardComponent>
             <CardComponent v-for="card in dealerCards" :key="card.suit+card.card" :card="card" />
           </div>
-          <div v-if="!isPlaying" class="bg-cyan-400 w-40 p-10 rounded-3xl">
-            <h2>Score</h2>
-            {{ gameData.dealerScore }}
-          </div>
+          <PlayerScore v-if="!isPlaying"  :score="gameData.dealerScore" />
         </div>
       </div>
     </div>
@@ -25,10 +22,7 @@
         <div class="flex gap-5 grow">
           <CardComponent v-for="card in gameData.playerHand" :key="card.suit+card.card" :card="card" />
         </div>
-        <div class="bg-cyan-400 w-40 p-10 rounded-3xl">
-          <h2>Score</h2>
-          {{ gameData.playerScore }}
-        </div>
+        <PlayerScore  :score="gameData.playerScore" />
       </div>
 
     </div>
@@ -45,6 +39,8 @@
 </template>
 
 <script setup>
+import PlayerScore from './components/PlayerScore.vue';
+
 
 const gameKey = ref(null)
 const gameData = ref({}); 
