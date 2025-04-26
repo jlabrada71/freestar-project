@@ -13,8 +13,6 @@ export default defineEventHandler(async (event) => {
   dealer.deals();
   
   const newGameKey = 'KEY:' + (1000 + Math.random() * 9999);
-  // const cached = await useStorage().getItem('some-key')
-  // if (cached) return cached
   const data = game.getData();
 
   await useStorage().setItem(newGameKey, data)
