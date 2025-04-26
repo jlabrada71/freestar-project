@@ -108,15 +108,18 @@ export class Game implements IDeal, IScorer {
 
     status() {
 
-        if (this.scoreOf(DEALER) > 16 && this.scoreOf(DEALER) < 22 && this.scoreOf(DEALER) === this.scoreOf(PLAYER)) {
+        const dealerScore = this.scoreOf(DEALER);
+        const playerScore = this.scoreOf(PLAYER)
+
+        if (dealerScore > 16 && dealerScore < 22 && dealerScore === playerScore) {
             return 'Push';
         }
 
-        if (this.scoreOf(PLAYER) > 21 || (this.scoreOf(DEALER) < 22 && this.scoreOf(DEALER) > this.scoreOf(PLAYER)) ) {
+        if (playerScore > 21 || (dealerScore < 22 && dealerScore > playerScore) ) {
             return 'Dealer Won';
         }
 
-        if (this.scoreOf(PLAYER) == 21 || this.scoreOf(PLAYER) > this.scoreOf(DEALER) || this.scoreOf(DEALER) > 21 ) {
+        if (playerScore == 21 || playerScore > dealerScore || dealerScore > 21 ) {
             return 'Player Won';
         }
 
