@@ -43,7 +43,7 @@ import PlayerScore from './components/PlayerScore.vue';
 
 
 const gameKey = ref(null)
-const gameData = ref({}); 
+const gameData = ref({ playerScore:0, dealerScore: 0 }); 
 const isPlaying = computed(() => gameData.value.status == 'Playing...')
 
 const dealerCards = computed(() => !isPlaying.value ? gameData.value.dealerHand: gameData.value.dealerHand.filter((card, i) => i > 0));
