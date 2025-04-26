@@ -345,6 +345,43 @@ describe('Determine the winner', () => {
             expect(game.scoreOf(PLAYER)).toBe(21);
         });
     });
+
+    
+
+    describe('when the dealer has a seven and a ten and the player a nine, three, three, two the score should be 17/17, and the status playing', () => {
+        const game = new Game();
+        const cards: Card[] = [
+            newCard(SUIT.Diamond, CARD.Five),
+            newCard(SUIT.Club, CARD.Ace),
+            newCard(SUIT.Club, CARD.Two),
+            newCard(SUIT.Club, CARD.Three),
+            newCard(SUIT.Club, CARD.Ten),
+            newCard(SUIT.Club, CARD.Three),
+            newCard(SUIT.Club, CARD.Seven),
+            newCard(SUIT.Club, CARD.Nine),
+        ]
+        game.init(cards);
+        const dealer = new Dealer(game, game);
+        dealer.deals();
+        
+        const player = new Player(dealer);
+        player.hit();
+        player.hit();
+
+        const status = game.status();
+
+        it('the status should be playing ', () => {
+            expect(status).toBe('Playing...');
+        });
+
+        it('the dealer should have 12 ', () => {
+            expect(game.scoreOf(DEALER)).toBe(17);
+        });
+
+        it('the player should have 9 ', () => {
+            expect(game.scoreOf(PLAYER)).toBe(17);
+        });
+    });
 });
 
 

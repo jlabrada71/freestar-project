@@ -3,13 +3,12 @@ import { type Card, type IShuffler, CARD, fisherYatesShuffler, newSetOfCards, ca
 export function scoreHand(hand: Card[]) {
     const total = hand.reduce((acc, card) => acc + cardValue(card), 0);
     if (total < 22) return total;
-    const reducedTotal = hand.reduce((acc, card) => card.card === CARD.Ace && acc > 22 ? acc - 10: acc , total)
+    const reducedTotal = hand.reduce((acc, card) => card.card === CARD.Ace && acc > 21 ? acc - 10: acc , total)
     return reducedTotal;
 }
 
 export const DEALER = 0;
 export const PLAYER = 1;
-
 
 interface IPlay {
     hit(): void;
@@ -87,6 +86,7 @@ export class Game implements IDeal, IScorer {
         this.#hands[DEALER] = [];
         this.#hands[PLAYER] = [];
         this.#cards = initialSet || this.#shuffler(newSetOfCards());
+        this.#standed = false;
     }
 
     scoreOf(player: number) {
@@ -123,16 +123,20 @@ export class Game implements IDeal, IScorer {
         const dealerScore = this.scoreOf(DEALER);
         const playerScore = this.scoreOf(PLAYER)
 
-        if (dealerScore > 16 && dealerScore < 22 && dealerScore === playerScore) {
+        if (dealerScore === playerScore && 
+           (dealerScore === 21 ||
+           (dealerScore > 16 && dealerScore < 21 &&  this.#standed))) {
             return 'Push';
         }
 
         if (playerScore > 21 || (dealerScore < 22 && dealerScore > playerScore && this.#standed) ) {
-            return 'Dealer Won';
+            return 'The Dealer Won';
         }
 
-        if (playerScore == 21 || (playerScore > dealerScore && this.#standed) || dealerScore > 21 ) {
-            return 'Player Won';
+        if (playerScore === 21 || 
+           (playerScore > dealerScore && this.#standed) || 
+            dealerScore > 21 ) {
+            return 'The Player Won';
         }
 
         return 'Playing...';

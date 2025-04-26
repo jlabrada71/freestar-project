@@ -69,4 +69,15 @@ describe('score a hand', () => {
             expect(score).toBe(19);
         });
     });
+
+    describe('score a hand with a Two Aces', () => {
+        const hand: Card[] = [
+            newCard(SUIT.Club, CARD.Ace), 
+            newCard(SUIT.Club, CARD.Ace)
+        ];
+        const score = scoreHand(hand);
+        it ('should return 12', () => {
+            expect(score).toBe(12);
+        });
+    });
 });
