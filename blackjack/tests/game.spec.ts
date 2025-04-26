@@ -129,8 +129,8 @@ describe('Determine the winner', () => {
         
         const status = game.status();
 
-        it('the status should be Player won ', () => {
-            expect(status).toBe('Player Won');
+        it('the status should be The Player Wins ', () => {
+            expect(status).toBe('The Player Wins');
         });
 
         it('the dealer should have 16 ', () => {
@@ -168,7 +168,7 @@ describe('Determine the winner', () => {
         const status = game.status();
 
         it('the status should be playing ', () => {
-            expect(status).toBe('Player Won');
+            expect(status).toBe('The Player Wins');
         });
 
         it('should have standed ', () => {
@@ -238,7 +238,7 @@ describe('Determine the winner', () => {
         const status = game.status();
 
         it('the status should be playing ', () => {
-            expect(status).toBe('Player Won');
+            expect(status).toBe('The Player Wins');
         });
 
         it('the dealer should have 22 ', () => {
@@ -269,7 +269,7 @@ describe('Determine the winner', () => {
         const status = game.status();
 
         it('the status should be playing ', () => {
-            expect(status).toBe('Dealer Won');
+            expect(status).toBe('The Dealer Wins');
         });
 
         it('the dealer should have 16 ', () => {
@@ -299,8 +299,8 @@ describe('Determine the winner', () => {
 
         const status = game.status();
 
-        it('the status should be Dealer won ', () => {
-            expect(status).toBe('Dealer Won');
+        it('the status should be The Dealer Wins ', () => {
+            expect(status).toBe('The Dealer Wins');
         });
 
         it('the dealer should have 12', () => {

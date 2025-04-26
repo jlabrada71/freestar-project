@@ -130,13 +130,13 @@ export class Game implements IDeal, IScorer {
         }
 
         if (playerScore > 21 || (dealerScore < 22 && dealerScore > playerScore && this.#standed) ) {
-            return 'The Dealer Won';
+            return 'The Dealer Wins';
         }
 
         if (playerScore === 21 || 
            (playerScore > dealerScore && this.#standed) || 
             dealerScore > 21 ) {
-            return 'The Player Won';
+            return 'The Player Wins';
         }
 
         return 'Playing...';

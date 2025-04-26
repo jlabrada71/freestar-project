@@ -1,5 +1,10 @@
 <template>
-    <div  class="bg-red-300 rounded-2xl p-5 w-32 h-full">
+    <div v-if="props.isFaceDown" class="bg-red-300 rounded-2xl p-5 w-32 h-40 border-8 border-red-50">
+        <slot>
+            <p>🚲 🚲 🚲 🚲 🚲 🚲 🚲 🚲 🚲 🚲 🚲 🚲</p>
+        </slot>
+    </div>
+    <div v-else class="bg-slate-50 rounded-2xl p-5 w-32 h-40">
         <slot>
             <div>
                 <div class="text-6xl text-center">
@@ -18,6 +23,10 @@ const props = defineProps({
     card: {
         type: Object,
         required: true
+    },
+    isFaceDown: {
+        type: Boolean,
+        default: false 
     }
 })
 
