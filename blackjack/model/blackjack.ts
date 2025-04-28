@@ -1,4 +1,5 @@
 import { type Card, type IShuffler, CARD, fisherYatesShuffler, newSetOfCards, cardValue } from './cards'
+import { DEALER, PLAYER } from './constants';
 
 export function scoreHand(hand: Card[]) {
     const total = hand.reduce((acc, card) => acc + cardValue(card), 0);
@@ -7,60 +8,11 @@ export function scoreHand(hand: Card[]) {
     return reducedTotal;
 }
 
-export const DEALER = 0;
-export const PLAYER = 1;
 
-interface IPlay {
-    hit(): void;
-    stand(): void;
-}
-
-interface IDeal {
+export interface IDeal {
     stand(): unknown;
     hasCards(): boolean;
     giveTo(player: number): void;
-}
-
-export class Player {
-    #dealer: IPlay;
-    constructor(dealer: IPlay) {
-        this.#dealer = dealer;
-    }
-
-    hit() {
-        this.#dealer.hit();
-    }
-
-    stand() {
-        this.#dealer.stand();
-    }
-} 
-
-export class Dealer implements IPlay {
-    #game: IDeal;
-    #scorer: IScorer;
-    constructor(game: IDeal, scorer: IScorer) {
-        this.#game = game;
-        this.#scorer = scorer;
-    }
-
-    hit() {
-        this.#game.giveTo(PLAYER);
-    }
-
-    stand() {
-        this.#game.stand();
-        while(this.#scorer.scoreOf(DEALER) < 17 && this.#game.hasCards()) {
-            this.#game.giveTo(DEALER);
-        }
-    }
-
-    deals() {
-        this.#game.giveTo(PLAYER);
-        this.#game.giveTo(DEALER);
-        this.#game.giveTo(PLAYER);
-        this.#game.giveTo(DEALER);
-    }
 }
 
 export interface IScorer {

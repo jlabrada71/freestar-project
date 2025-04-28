@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { Game, PLAYER, DEALER, Dealer, Player } from "../model/blackjack";
+import { Game } from "../model/blackjack";
+import { Dealer } from '../model/dealer';
+import { Player } from '../model/player';
+import { DEALER, PLAYER } from "../model/constants";
 import { type Card, newCard, SUIT, CARD } from '../model/cards';
 
 describe('Game initialization', () => {

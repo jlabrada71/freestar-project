@@ -1,4 +1,5 @@
-import { Game, Dealer, Player } from '../../model/blackjack';
+import { Game } from '../../model/blackjack';
+import { Dealer } from '../../model/dealer';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -7,12 +8,14 @@ export default defineEventHandler(async (event) => {
     const game = new Game();
 
     const val = await useStorage().getItem(gameKey)
+    if (!val) {
+      throw new Error('Game not found');
+    }
     game.setData(val);
 
     
     const dealer = new Dealer(game, game);
-    const player = new Player(dealer);
-    player.hit();
+    dealer.hit();
     
 
     const data = game.getData();

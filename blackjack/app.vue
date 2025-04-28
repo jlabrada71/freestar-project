@@ -1,6 +1,4 @@
 <template>
- 
-
   <div class="font-bold bg-cyan-100 p-10 gap-5 flex flex-col">
     <div class="text-7xl font-black"> <span>{{ gameData.status }}</span></div>
 
@@ -23,32 +21,32 @@
 
 <script setup>
 
+import { DealerProxy } from './model/dealer';
+import { Player } from './model/player';
+
 const gameKey = ref(null)
 const gameData = ref({ status: 'Click "Start Game" to begin', playerScore:0, dealerScore: 0, playerHand: [], dealerHand: []}); 
-const isPlaying = computed(() => gameData.value.status === 'Playing...')
+const isPlaying = computed(() => gameData.value.status === 'Playing...');
 
-  async function initGame() {
-    const data = await $fetch('/api/init-game', {
-      method: 'POST',
-      body: { gameKey: gameKey.value }
-    })
-    gameKey.value = data.gameKey;
-    gameData.value = data.game;
-  }
+const dealerProxy = new DealerProxy(gameKey, gameData, $fetch);
 
-  async function hit() {
-    const data = await $fetch('/api/hit', {
-      method: 'POST', 
-      body: { gameKey: gameKey.value }
-    })
-    gameData.value = data.game;
-  }
+const player = new Player(dealerProxy)
 
-  async function stand() {
-    const data = await $fetch('/api/stand', {
-      method: 'POST', 
-      body: { gameKey: gameKey.value }
-    })
-    gameData.value = data.game;
-  }
+async function initGame() {
+  const data = await $fetch('/api/init-game', {
+    method: 'POST',
+    body: { gameKey: gameKey.value }
+  })
+  gameKey.value = data.gameKey;
+  gameData.value = data.game;
+}
+
+function hit() {
+  player.hit();
+}
+
+function stand() {
+  player.stand();
+}
+
 </script>

@@ -1,4 +1,5 @@
-import { Game, Dealer, Player } from '../../model/blackjack';
+import { Game } from '../../model/blackjack';
+import { Dealer } from '../../model/dealer';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -12,12 +13,9 @@ export default defineEventHandler(async (event) => {
   }
   game.setData(val);
 
-  
   const dealer = new Dealer(game, game);
-  const player = new Player(dealer);
-  player.stand();
+  dealer.stand();
 
-  
   const data = game.getData();
 
   await useStorage().setItem(gameKey, data)

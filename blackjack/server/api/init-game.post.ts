@@ -1,4 +1,5 @@
-import { Game, Dealer } from '../../model/blackjack';
+import { Game } from '../../model/blackjack';
+import { Dealer } from '../../model/dealer';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
